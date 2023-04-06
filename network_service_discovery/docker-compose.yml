@@ -1,0 +1,64 @@
+version: '3'
+services:
+  http-a:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    networks:
+      - my-network
+
+  http-b:
+    image: httpd:latest
+    ports:
+      - "90:90"
+    networks:
+      - my-network
+
+  ftp-a:
+    image: stilliard/pure-ftpd:hardened
+    ports:
+      - "21:21"
+    environment:
+      FTP_USER_NAME: "testuser"
+      FTP_USER_PASS: "testpassword"
+    networks:
+      - my-network
+
+  ftp-b:
+    image: ustclug/ftp
+    ports:
+      - "20:20"
+    environment:
+      PRIVATE_USERNAME: "testuser"
+      PRIVATE_PASSWD: "testpassword"
+    networks:
+      - my-network
+
+  
+  db:
+    image: mariadb:latest
+    restart: always
+    environment:
+      MARIADB_ROOT_PASSWORD: example
+    ports:
+      - 2020:2020
+    networks:
+      - my-network
+
+  adminer:
+    image: adminer:latest
+    restart: always
+    ports:
+      - 8080:8080
+    networks:
+      - my-network
+
+  ssh:
+    image: linuxserver/openssh-server:latest
+    ports:
+      - "22:22"
+    networks:
+      - my-network
+
+networks:
+  my-network:
